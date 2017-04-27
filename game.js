@@ -7,12 +7,23 @@ var wn = new Wordnik({
     api_key: 'a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5'
 });
 
-var quit=function(){
-    console.log("thanks for playing")
+var quit=function(word){
+    var output={};
+    output.word=word;
+    request('http://localhost:3000/getDefinitions/'+word , function (error, response, defs) {
+        output.definitions=defs;
+    })   
+    request('http://localhost:3000/getSynonyms/'+word , function (error, response, syns) {
+        output.synonyms=syns;
+    })  
+    request('http://localhost:3000/getAntonyms/'+word , function (error, response, antns) {
+        output.antonyms=antns;
+    })       
+    console.log("thanks for playing,your word information is :",output)
 }
 
 var definition =function(word){
-    console.log("in definition",word)
+    // console.log("in definition",word)
     var url='http://localhost:3000/getDefinitions/'+word;
         request(url , function (error, response, defs) {
         console.log('definitions:', defs); 
@@ -22,8 +33,8 @@ var definition =function(word){
                 message:"word"
                 }]
             inquirer.prompt(question2).then(function (answer2){
-                console.log(answer2.userValue)
-                console.log(word)
+                // console.log(answer2.userValue)
+                // console.log(word)
                 if(answer2.userValue==word){
                     console.log("correct")
                 }
@@ -44,8 +55,8 @@ var synonym= function(word){
                 message:"word"
                 }]
             inquirer.prompt(question2).then(function (answer2){
-                console.log(answer2.userValue)
-                console.log(word)
+                // console.log(answer2.userValue)
+                // console.log(word)
                 if(answer2.userValue==word){
                     console.log("correct")
                 }
@@ -66,8 +77,8 @@ var antonym= function(word){
                     message:"word"
                     }]
                 inquirer.prompt(question2).then(function (answer2){
-                    console.log(answer2.userValue)
-                    console.log(word)
+                    // console.log(answer2.userValue)
+                    // console.log(word)
                     if(answer2.userValue==word){
                         console.log("correct")
                     }
@@ -88,7 +99,7 @@ var select = function(){
         }]  
     inquirer.prompt(question).then(function (answer1) {
         request('http://localhost:3000/getRandomWord', function (error, response, word) {
-        console.log(word)
+        // console.log(word)
             if(answer1.type=='Defination'){
                 definition(word);
             }
@@ -118,7 +129,7 @@ var options= function(word,optionWord){
                         choices: ['Defination', 'Synonyms', 'Antonyms'],
                     }]  
                 inquirer.prompt(question).then(function (answer1) {
-                    console.log(word)
+                    // console.log(word)
                         if(answer1.type=='Defination'){
                             definition(word);
                         }
@@ -142,7 +153,7 @@ var options= function(word,optionWord){
             }  
         }
         if(answer3.options=='quit'){
-            quit();
+            quit(word);
         }
     })
 }
